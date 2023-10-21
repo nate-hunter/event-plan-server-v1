@@ -9,7 +9,7 @@ from rest_framework.views import APIView
 
 from user_profile.models import UserProfile
 
-# from .serializers import UserSerializer
+from .serializers import UserSerializer
 
 
 @method_decorator(csrf_protect, name='dispatch')
@@ -21,9 +21,9 @@ class CheckAuthenticatedView(APIView):
       isAuthenticated = user.is_authenticated
 
       if isAuthenticated:
-        return Response({'isAuthenticated': 'succes'})
+        return Response({'success': 'Authenticated', 'user': str(user)})
       else:
-        return Response({'isAuthenticated': 'error'})
+        return Response({'error': 'Not authenticated'})
 
     except:
       return Response({'error': 'Something went wrong checking authentication status'})
@@ -58,13 +58,7 @@ class RegisterView(APIView):
 
       user = User.objects.create_user(username=username, password=password)
       user = User.objects.get(id=user.id)
-      user_profile = UserProfile.objects.create(
-        user=user,
-        first_name='',
-        last_name='',
-        phone_number_1='',
-        address_city='',
-      )
+      user_profile = UserProfile.objects.create(user=user)
       return Response({'success': 'User created'})
 
     except:
@@ -85,15 +79,13 @@ class LoginView(APIView):
       user = auth.authenticate(username=username, password=password)
 
       if user is None:
-        return Response({'error': 'Error logging in'})
+        return Response({'error': f"'{username}' does not exist or incorrect password"})
 
       auth.login(request, user)
       return Response({'success': 'User authenticated'})
 
     except:
       return Response({'error': 'Something went wrong logging in'})
-
-
 
 
 class LogoutView(APIView):
@@ -104,3 +96,23 @@ class LogoutView(APIView):
 
     except:
       return Response({'error': 'Something went wrong logging out'})
+
+
+class DeleteAccountView(APIView):
+  def delete(self, request, format=None):
+    try:
+      user = User.objects.filter(id=self.request.user.id).delete()
+      return Response({'success': 'User deleted'})
+    except:
+      return Response({'error': 'Something went wrong deleting user'})
+
+
+class GetUsersView(APIView):
+  permission_classes = (permissions.AllowAny, )
+
+  def get(self, request):
+    users = User.objects.all()
+
+    users = UserSerializer(users, many=True)
+
+    return Response(users.data)
