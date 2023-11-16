@@ -15,20 +15,34 @@ class Event(models.Model):
   description = models.TextField(blank=True)
   details = models.TextField(blank=True)
 
-  date = models.DateTimeField(blank=True)
-  # time_begin = models.DateTimeField(blank=True)
-  # time_ennd = models.DateTimeField(blank=True)
+  date = models.DateTimeField(blank=True, null=True)
+  # time_start = models.DateTimeField(blank=True)
+  # time_end = models.DateTimeField(blank=True)
 
   created_at = models.DateTimeField(auto_now_add=True, blank=True)
   updated_at = models.DateTimeField(auto_now=True, blank=True)
 
-  budget = models.DecimalField(max_digits=19, decimal_places=4, blank=True)
+  budget = models.DecimalField(max_digits=19, decimal_places=4, blank=True, null=True)
 
-  num_guests = models.IntegerField(blank=True)
-  cost = models.DecimalField(max_digits=19, decimal_places=4, blank=True)
-  cost_per_guest = models.DecimalField(max_digits=19, decimal_places=4, blank=True)
+  num_guests = models.IntegerField(blank=True, null=True)
+  cost = models.DecimalField(max_digits=19, decimal_places=4, blank=True, null=True)
+  cost_per_guest = models.DecimalField(max_digits=19, decimal_places=4, blank=True, null=True)
 
   is_pinned = models.BooleanField(default=False)
-  # color = models.CharField(max_length=150, blank=True) # QUESTON: Make this a model? `Many-to-Many`?
 
 
+# class GuestList(models.Model):
+#   name = models.CharField(max_length=155, blank=True)
+#   event = models.ForeignKey(Event, on_delete=models.CASCADE)
+
+#   def __str__(self):
+#     return self.name
+
+
+# class Guest(models.Model):
+#   first_name = models.CharField(max_length=155, blank=True)
+#   last_name = models.CharField(max_length=155, blank=True)
+
+#   def __str__(self):
+#     name = f'{self.last_name}, {self.first_name}'
+#     return self.name
