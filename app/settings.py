@@ -28,6 +28,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', get_random_secret_key())
 
 # SECURITY WARNING: don't run with debug turned on in production!
+"""DEVELOPMENT MODE:"""
+# DEBUG = os.getenv('DEBUG', 'True') == 'True'
+"""PRODUCTION MODE:"""
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', '127.0.0.1,localhost,https://event-plan-ruby.vercel.app/').split(',')
@@ -48,6 +51,7 @@ INSTALLED_APPS = [
     'something',
     'user_profile',
     'accounts',
+    'events',
 ]
 
 MIDDLEWARE = [
@@ -84,6 +88,9 @@ WSGI_APPLICATION = 'app.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
+"""DEVELOPMENT MODE:"""
+# DEVELOPMENT_MODE = os.getenv('DEVELOPMENT_MODE', 'True') == 'True'
+"""PRODUCTION MODE:"""
 DEVELOPMENT_MODE = os.getenv('DEVELOPMENT_MODE', 'False') == 'True'
 
 if DEVELOPMENT_MODE is True:
@@ -150,13 +157,15 @@ CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:5173',
     'http://localhost:8000',
     'http://127.0.0.1:8000',
+    'http://localhost:5174',
+    'http://127.0.0.1:5174',
 ]
 
-REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
-    ],
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.SessionAuthentication',
-    ],
-}
+# REST_FRAMEWORK = {
+#     'DEFAULT_PERMISSION_CLASSES': [
+#         'rest_framework.permissions.IsAuthenticated',
+#     ],
+#     'DEFAULT_AUTHENTICATION_CLASSES': [
+#         'rest_framework.authentication.SessionAuthentication',
+#     ],
+# }
